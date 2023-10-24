@@ -7,3 +7,4 @@
 eu_trade_working.tsv
 load_DB.py
 main.py
+__pycache__/create_tables.cpython-311.pyc
