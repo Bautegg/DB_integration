@@ -4,3 +4,5 @@
 
 #file names to ignore
 
+eu_trade_working.tsv
+load_DB.py
