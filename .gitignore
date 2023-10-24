@@ -1,0 +1,6 @@
+#file to ignore
+*.ipynb
+*.csv
+
+#file names to ignore
+
