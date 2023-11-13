@@ -1,11 +1,14 @@
 from create_tables import *
 
 def sql_query():
-    export_file = "euro_trade_df12.csv"
-    file_path = f"/home/bautegg/Documents/Wunsz/GitHub/DB_integration/{export_file}"
-    table_name = 'trade_euro4'
+    sub_folder = "V_1"
+    print(sub_folder)
+    export_file = "european_trade123.csv"
+    file_path = f"/home/bautegg/Documents/Wunsz/GitHub/DB_integration/{sub_folder}/{export_file}"
+    table_name = 'population'
 
     df = pd.read_csv(export_file)
+    print(df)
     col_list = df.head()
 
     column_types = ''

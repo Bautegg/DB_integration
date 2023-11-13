@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import os
 
 """
 data sources:
@@ -55,11 +56,14 @@ def trade_cleansing():
     df["country_id"] = df["trade"].str[2:4]
     df["ext_int"] = df["trade"].str[-28:-23]
     df["imp_exp"] = df["trade"].str[-16].replace({"1": "IMPORT", "2": "EXPORT"})
-    # divide df to word and month tables
+    # divide df to "year" and "month" tables
     df_year = df.iloc[:166, :]
     df_year = df_year.loc[:, ["country_id", "ext_int", "imp_exp", "2020", "2021", "2022"]]
     df_year = pd.melt(df_year, id_vars=["country_id", "ext_int", "imp_exp"], value_vars=["2020", "2021", "2022"],
                       var_name="year", value_name="trade_value")
+    df_year["year"] = pd.to_datetime(df_year["year"], format="%Y")
+
+    # transformation of table "month"
     df_month = df.iloc[166:, :]
     df_month = df_month.drop(["2020", "2021", "2022"], axis=1)
     df_month_r = df_month.iloc[:, 1: 31]
@@ -81,21 +85,22 @@ def trade_cleansing():
     df_pop = pd.concat([df2.iloc[:, 2], sr_country, df2.iloc[:, 1], sr_geo_data, df_population.iloc[:, 1:64]], axis=1)
     df_pop = df_pop.rename(columns={2: "country_id", 1: "data_short"})
     pop_header = list(df_pop.iloc[:, 4:])
+    df_pop = df_pop[df_pop["data_short"] == "AVG"]
     df_pop = pd.melt(df_pop, id_vars=["country_id", "country_name", "data_short", "data_desc"], value_vars=pop_header,
                        var_name="year", value_name="pop_value")
+    df_pop.iloc[:, -1] = df_pop.iloc[:, -1].str.replace(r'[A-z]', '', regex=True)
+    df_pop["year"] = pd.to_datetime(df_pop["year"], format="%Y")
 
     return [df_year, df_month, df_pop]
 
 
-def export_file_sql():
-    export_file = "euro_trade_df"
+def export_file_sql(sub_folder="V_1", export_file="european_trade"):
     df_list = trade_cleansing()
     counter = 0
     for i in df_list:
         counter += 1
         export_file = export_file + str(counter)
-        # i.to_csv(f"{export_file}.csv", sep=",", index_label=primary_key_label, float_format="%.0f")
-
+        i.to_csv(f"{sub_folder}/{export_file}.csv", sep=",", index_label=primary_key_label, float_format="%.0f")
 
 
 def basic_analyse():
@@ -124,5 +129,5 @@ if __name__ == '__main__':
     # print(prepare_header())
     # print("** basic_analyse **\n", basic_analyse())
     # print("** read_json **\n", read_json())
-    # print("** export_file_sql **\n", export_file_sql())
+    print("** export_file_sql **\n", export_file_sql())
     print("** trade_cleansing **\n", trade_cleansing())
