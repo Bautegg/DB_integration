@@ -23,8 +23,6 @@ def load_file(df_key):
 
     return df
 
-# TODO wwszystkie 4 operacje wykonać na każdym elemencie
-
 
 def prepare_header(df_key):
     df_p = load_file(df_key)
@@ -74,6 +72,7 @@ def trade_cleansing():
                       var_name="month", value_name="trade_value")
     df_month["month"] = pd.to_datetime(df_month["month"], format="%Y.%m")
 
+    # transformation of table "month"
     table_name = "population"
     df_population = load_file(table_name)
     df_population .columns = prepare_header(table_name)
@@ -91,6 +90,7 @@ def trade_cleansing():
     df_pop.iloc[:, -1] = df_pop.iloc[:, -1].str.replace(r'[A-z]', '', regex=True)
     df_pop["year"] = pd.to_datetime(df_pop["year"], format="%Y")
 
+    df_pop.info()
     return [df_year, df_month, df_pop]
 
 
@@ -112,16 +112,6 @@ def basic_analyse():
     df.fillna(0, inplace=True)
     sum_2020 = sum(df.iloc[:, 1])
     return sum_2020
-
-    # TODO tabela sumująca wartości ze wszystkich krajów, tabela porównująca import i eksport per kraj
-    # TODO sensownie podzielić na więcej kolumn tabele populacja
-    # TODO zabezpieczeniqa autorskie do psycopg2-binarry
-    # TODO zestawić dane handlowe np. z populacją
-    # TODO nagłówek z pliku i tabeli musi się zgadzać, zapisać nowy plik i go załadować do psql
-
-    # ---TODO funkcja load_file ma pobrać słownik nazwa pliku: ścieżka pliku i zwrócić liste df w zależności od parametru funkcji load_file---
-    # ---TODO skupić się na tabeli per miesiąc, zamienić kolumnę "month" na datę---
-    # ---TODO zrobić z danych pivota (columny z datą jako wiersze) -> pd.melt---
 
 
 if __name__ == '__main__':
