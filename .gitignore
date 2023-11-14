@@ -1,6 +1,6 @@
 #file to ignore
 *.ipynb
-*.csv
+
 
 #file names to ignore
 
@@ -8,3 +8,4 @@ eu_trade_working.tsv
 load_DB.py
 main.py
 __pycache__/create_tables.cpython-311.pyc
+create_query.py

@@ -1,0 +1,7 @@
+select trade_year.p_k, trade_year.country_id, country_name, imp_exp, trade_year.year
+	, pop_value, trade_value 
+from trade_year
+	join population on population.country_id = trade_year.country_id 
+		and population.year = trade_year.year
+where trade_year.country_id = 'PL' and ext_int = 'WORLD'
+;
