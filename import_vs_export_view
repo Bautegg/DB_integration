@@ -1,0 +1,10 @@
+create view import_vs_export AS
+select
+country_id,
+ext_int,
+year,
+sum(trade_value) filter (where imp_exp = 'IMPORT') import,
+sum(trade_value) filter (where imp_exp = 'EXPORT') export
+from trade_year
+group by 1,2,3
+order by country_id, ext_int, year

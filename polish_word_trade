@@ -1,7 +1,20 @@
-select trade_year.p_k, trade_year.country_id, country_name, imp_exp, trade_year.year
-	, pop_value, trade_value 
+create view import_vs_export as
+select country_id, ext_int, year,
+sum(trade_value) filter (where imp_exp = 'IMPORT') import,
+sum(trade_value) filter (where imp_exp = 'EXPORT') export
 from trade_year
-	join population on population.country_id = trade_year.country_id 
-		and population.year = trade_year.year
-where trade_year.country_id = 'PL' and ext_int = 'WORLD'
-;
+where country_id = 'PL'
+group by 1,2,3
+order by country_id, ext_int, year;
+
+select population.country_id, population.country_name, ext_int, population.year
+, to_char(import, 'fm999 999 999 999') as import
+, to_char(export, 'fm999 999 999 999') as export
+, to_char(pop_value, 'fm999 999 999') as pop_value
+from public.import_vs_export
+join population on population.country_id = import_vs_export.country_id
+	and population.year = import_vs_export.year
+where population.country_id = 'PL'
+order by country_name, ext_int, year;
+
+

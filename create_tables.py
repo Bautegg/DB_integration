@@ -57,6 +57,7 @@ def trade_cleansing():
     # divide df to "year" and "month" tables
     df_year = df.iloc[:166, :]
     df_year = df_year.loc[:, ["country_id", "ext_int", "imp_exp", "2020", "2021", "2022"]]
+    print("**DF_YEAR** n/", df_year)
     df_year = pd.melt(df_year, id_vars=["country_id", "ext_int", "imp_exp"], value_vars=["2020", "2021", "2022"],
                       var_name="year", value_name="trade_value")
     df_year["year"] = pd.to_datetime(df_year["year"], format="%Y")
@@ -72,7 +73,7 @@ def trade_cleansing():
                       var_name="month", value_name="trade_value")
     df_month["month"] = pd.to_datetime(df_month["month"], format="%Y.%m")
 
-    # transformation of table "month"
+    # transformation of table "population"
     table_name = "population"
     df_population = load_file(table_name)
     df_population .columns = prepare_header(table_name)
@@ -90,7 +91,7 @@ def trade_cleansing():
     df_pop.iloc[:, -1] = df_pop.iloc[:, -1].str.replace(r'[A-z]', '', regex=True)
     df_pop["year"] = pd.to_datetime(df_pop["year"], format="%Y")
 
-    df_pop.info()
+
     return [df_year, df_month, df_pop]
 
 
